@@ -1,0 +1,12 @@
+﻿# Environnement virtuel
+venv/
+.env
+
+# Fichiers de secrets Google (TRÈS IMPORTANT)
+credentials.json
+token.json
+client_secret.json
+
+# Python
+__pycache__/
+*.py[cod]
