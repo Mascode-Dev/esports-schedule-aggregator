@@ -1,6 +1,8 @@
 ﻿import streamlit as st
 import os
 from dotenv import load_dotenv
+from google_cal_service import GoogleCalendarService
+from leaguepedia_client import get_upcoming_matches, get_tournament
 from google_auth_oauthlib.flow import Flow
 from googleapiclient.discovery import build
 
@@ -53,8 +55,8 @@ if 'credentials' not in st.session_state:
     else:
         # Display login button if no code present
         auth_url, _ = flow.authorization_url(prompt='consent')
-        st.write("Connecte ton calendrier pour commencer :")
-        st.link_button("Se connecter à Google", auth_url)
+        st.write("Please login to your calendar to continue:")
+        st.link_button("Login with Google", auth_url)
 
 # Once connected
 else:
@@ -67,12 +69,21 @@ else:
     st.divider()
     league = st.multiselect("Select the league to synchronize", ["LFL", "LEC", "LCK", "LPL"])
     
+    cal_manager = GoogleCalendarService(st.session_state.credentials)
     if st.button(f"Import {league} matches"):
-        st.write(f"Searching for {league} matches on Leaguepedia...")
-        # Here you will call your fetch and insert functions
-        # matches = get_upcoming_matches(league)
-        # ...
-        st.info("Sync functionality is under development!")
+        tournaments = get_tournament(league)
+        tournament_names = [t[1] for t in tournaments]
+        matches = get_upcoming_matches(tournament_names)
+        
+        existing_ids = cal_manager.get_existing_ids(days_ahead=60)
+        
+        new_events_count = 0
+        for match in matches:
+            if match['match_id'] not in existing_ids:
+                cal_manager.create_match_event({'title': match})
+                new_events_count += 1
+        
+        st.success(f"Import completed! {new_events_count} new events added to your calendar.")
 
     if st.button("Disconnect"):
         del st.session_state.credentials
