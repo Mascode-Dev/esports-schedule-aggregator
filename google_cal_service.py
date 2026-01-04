@@ -49,6 +49,8 @@ class GoogleCalendarService:
         start_dt = datetime.strptime(start_str, '%Y-%m-%d %H:%M:%S')
         if m['best_of'] == '1' and m['match_id'].split('/')[0] == 'LEC':
             end_dt = start_dt + timedelta(hours=0.75)  # LEC Bo1 are estimated at 45 minutes
+        elif m['best_of'] == '3' and (m['match_id'].split('/')[0] == 'LPL' or m['match_id'].split('/')[0] == 'LCK'):
+            end_dt = start_dt + timedelta(hours=2)     # LPL Bo3 are estimated at 2 hours for visbility purposes
         else:
             end_dt = start_dt + timedelta(hours=1*int(m['best_of'])) # Estimated time based on BestOf length
 
