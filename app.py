@@ -39,7 +39,7 @@ SCOPES = ['https://www.googleapis.com/auth/calendar']
 flow = Flow.from_client_config(
     CLIENT_CONFIG,
     scopes=SCOPES,
-    redirect_uri='http://localhost:8501'
+    redirect_uri=URI
 )
 
 # Authentication Steps
