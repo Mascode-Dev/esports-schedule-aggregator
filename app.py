@@ -11,6 +11,7 @@ load_dotenv()
 CLIENT_ID = os.getenv("CLIENT_ID")
 CLIENT_SECRET = os.getenv("CLIENT_SECRET")
 PROJECT_ID = os.getenv("PROJECT_ID")
+URI= os.getenv("URI")
 
 st.title("Esports Schedule Aggregator 📅")
 
@@ -24,10 +25,10 @@ CLIENT_CONFIG = {
         "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
         "client_secret": CLIENT_SECRET,
         "redirect_uris": [
-            "http://localhost:8501",
+            URI,
         ],
         "javascript_origins": [
-            "http://localhost:8501"
+            URI
         ]
     }
 }
